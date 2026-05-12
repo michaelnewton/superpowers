@@ -79,6 +79,27 @@ Each export must have:
         "frontend/",
         "tests/"
       ]
+    },
+    {
+      "id": "SAM-002",
+      "parent_id": "SAM-001",
+      "title": "Add FastAPI application entrypoint",
+      "type": "backend",
+      "status": "pending",
+      "estimated_minutes": 10,
+      "depends_on": [
+        "SAM-001"
+      ],
+      "description": "Create a minimal FastAPI app with a health route only.",
+      "acceptance_criteria": [
+        "App starts successfully.",
+        "GET /health returns 200."
+      ],
+      "test_command": "pytest tests/test_health.py",
+      "files_expected": [
+        "backend/main.py",
+        "tests/test_health.py"
+      ]
     }
   ]
 }
@@ -86,6 +107,7 @@ Each export must have:
 
 ## Task Design Guidance
 
+- Every task object must include `estimated_minutes`. Never omit it after the first task.
 - Use project-scoped stable IDs: `<PREFIX>-001`, `<PREFIX>-002`, ...
 - Set `task_id_prefix` to a 3-letter uppercase prefix derived from the project name, for example `SAM`, `API`, `WEB`
 - Every task id must use that prefix
@@ -105,9 +127,10 @@ Each export must have:
 2. Expand each plan task into the smallest reasonable next actions.
 3. Add parent-child relationships where they help preserve structure.
 4. Add dependencies so execution order is explicit.
-5. Write the export file to `.project/tasks/`.
-6. Run `python3 scripts/validate_micro_tasks.py <path-to-file>`.
-7. If validation fails, fix the file and rerun the validator.
+5. Before writing the file, scan every task object and confirm it contains all required keys, especially `estimated_minutes`.
+6. Write the export file to `.project/tasks/`.
+7. Run `python3 scripts/validate_micro_tasks.py <path-to-file>`.
+8. If validation fails, fix the file and rerun the validator.
 
 ## Validation Standard
 
@@ -118,6 +141,7 @@ The export is invalid if:
 - `parent_id` points to a missing task
 - `depends_on` contains a missing task
 - Any task exceeds 10 minutes without an explicit `exception: true`
+- Any task is missing `estimated_minutes`
 - Any task is missing `description`
 - Any task is missing `acceptance_criteria`
 - Any task is missing `type`
